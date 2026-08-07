@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Feedback -- Session {{ idx + 1 }}{% endblock %}
+{% block content %}
+  <p class="progress">Session {{ idx + 1 }} of {{ total }} complete</p>
+  <h1>{{ result.entry.mode_name }} -- feedback</h1>
+
+  <section class="panel highlight-box">
+    <h2>What worked</h2>
+    <p>{{ result.report.highlight }}</p>
+  </section>
+
+  <section class="panel fix-box">
+    <h2>The one thing to fix next</h2>
+    <p>{{ result.report.top_fix }}</p>
+  </section>
+
+  {% if result.report.trend_line %}
+  <section class="panel">
+    <p class="trend">{{ result.report.trend_line }}</p>
+  </section>
+  {% endif %}
+
+  {% if result.video_note %}
+  <section class="panel">
+    <p class="video-note">{{ result.video_note }}</p>
+  </section>
+  {% endif %}
+
+  <section class="panel numbers">
+    <h2>Numbers</h2>
+    <div class="metric-grid">
+      <div class="metric"><span class="value">{{ result.metrics.wpm }}</span><span class="label">words/min</span></div>
+      <div class="metric"><span class="value">{{ result.metrics.filler_rate }}%</span><span class="label">filler rate</span></div>
+      <div class="metric"><span class="value">{{ result.metrics.pause_count }}</span><span class="label">pauses</span></div>
+      <div class="metric"><span class="value">{{ result.report.structure_score }}/10</span><span class="label">structure</span></div>
+      <div class="metric"><span class="value">{{ result.duration_seconds }}s</span><span class="label">duration</span></div>
+      <div class="metric"><span class="value">{{ result.word_count }}</span><span class="label">words</span></div>
+    </div>
+    {% if result.has_video_metrics %}
+    <h2 class="video-metrics-heading">Body language</h2>
+    <div class="metric-grid">
+      <div class="metric"><span class="value">{{ result.metrics.eye_contact_score }}/10</span><span class="label">facing camera</span></div>
+      <div class="metric"><span class="value">{{ result.metrics.posture_score }}/10</span><span class="label">posture</span></div>
+      <div class="metric"><span class="value">{{ result.metrics.gesture_score }}/10</span><span class="label">gesture range</span></div>
+      <div class="metric"><span class="value">{{ result.metrics.engagement_score }}/10</span><span class="label">engagement</span></div>
+    </div>
+    <p class="feedback-source">"Facing camera" is a head-orientation proxy, not true gaze/iris tracking -- see README.</p>
+    {% endif %}
+    <p class="feedback-source">Feedback source: {{ result.report.source }}</p>
+  </section>
+
+  <section class="panel transcript-box">
+    <h2>Transcript</h2>
+    <p class="transcript">{{ result.transcript }}</p>
+  </section>
+
+  {% if has_next %}
+    <a class="primary btn-link" href="{{ url_for('session_view', idx=next_idx) }}">Next session →</a>
+  {% else %}
+    <a class="primary btn-link" href="{{ url_for('finished') }}">Finish today's queue →</a>
+  {% endif %}
+{% endblock %}

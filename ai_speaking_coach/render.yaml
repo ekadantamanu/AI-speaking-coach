@@ -1,0 +1,23 @@
+# Render "Blueprint" config -- lets Render auto-configure the service when
+# you connect this repo (New -> Blueprint), instead of clicking through
+# every setting by hand. Secrets (marked sync: false) still need to be
+# typed into the Render dashboard yourself -- they're deliberately not
+# something that lives in this file / your git history.
+services:
+  - type: web
+    name: ai-speaking-coach
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 1 --threads 4 --timeout 120 app:app
+    envVars:
+      - key: WHISPER_MODEL_SIZE
+        value: tiny        # smaller/faster model -- kinder to the free tier's 512MB RAM
+      - key: APP_PASSWORD
+        sync: false         # set this in the Render dashboard -- required for privacy
+      - key: SPEAKING_COACH_SECRET
+        sync: false         # set this too -- a long random string, secures the login cookie
+      - key: GITHUB_TOKEN
+        sync: false         # optional -- only needed for GitHub-backed history persistence
+      - key: GITHUB_REPO
+        sync: false         # optional -- "yourname/your-repo", pairs with GITHUB_TOKEN

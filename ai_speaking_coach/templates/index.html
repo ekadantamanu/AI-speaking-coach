@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}AI Speaking Coach{% endblock %}
+{% block content %}
+  <h1>How many sessions today?</h1>
+  <p>Pick 1-6. The queue is built for you -- a warm-up, weakness-targeted reps,
+     a novelty mode, and a stress test as you add more, following the daily
+     builder in the design spec. No two days look the same.</p>
+
+  <form method="post" action="{{ url_for('plan') }}" class="session-picker">
+    <div class="count-buttons">
+      {% for n in range(1, 7) %}
+        <label class="count-btn">
+          <input type="radio" name="session_count" value="{{ n }}" {% if n == 2 %}checked{% endif %}>
+          <span>{{ n }}</span>
+        </label>
+      {% endfor %}
+    </div>
+    <button type="submit" class="primary">Build today's queue</button>
+  </form>
+
+  <section class="panel">
+    <h2>Your progress so far</h2>
+    <p>{{ session_count }} sessions logged.</p>
+    {% if summary.weakest %}
+      <p>Current focus area: <strong>{{ summary.weakest.replace('_', ' ') }}</strong>
+         -- today's queue will lean toward modes that target it.</p>
+    {% else %}
+      <p>No history yet -- your first sessions will be exploratory across different modes.</p>
+    {% endif %}
+    <a href="{{ url_for('dashboard') }}">View full dashboard →</a>
+  </section>
+
+  <section class="panel">
+    <h2>The 10 modes in rotation</h2>
+    <ul class="mode-list">
+      <li><strong>Impromptu Sprint</strong> -- fluency under zero prep</li>
+      <li><strong>Structured Persuasion</strong> -- argument construction</li>
+      <li><strong>Storytelling</strong> -- vocal variety &amp; pacing</li>
+      <li><strong>Explain-It-Simply</strong> -- clarity</li>
+      <li><strong>Debate + Rebuttal</strong> -- quick thinking under pushback</li>
+      <li><strong>Elevator Pitch</strong> -- conciseness</li>
+      <li><strong>Full Presentation</strong> -- end-to-end structure</li>
+      <li><strong>Q&amp;A Stress Test</strong> -- handling the unpredictable</li>
+      <li><strong>Vocal Drill</strong> -- pace, pitch, pause mechanics</li>
+      <li><strong>Body Language Mirror</strong> -- posture &amp; presence (audio scored for now)</li>
+    </ul>
+  </section>
+{% endblock %}

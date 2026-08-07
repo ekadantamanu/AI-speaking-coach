@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h1>Your trends</h1>
+
+  {% if summary.trends %}
+    <section class="panel">
+      <div class="metric-grid">
+        {% for name, stats in summary.trends.items() %}
+          <div class="metric">
+            <span class="value">{{ stats.latest }}</span>
+            <span class="label">{{ name.replace('_', ' ') }} (avg {{ stats.avg | round(2) }}, n={{ stats.n }})</span>
+          </div>
+        {% endfor %}
+      </div>
+      {% if summary.weakest %}
+        <p>Weakest trending metric right now: <strong>{{ summary.weakest.replace('_', ' ') }}</strong>
+           -- future "main" slots will be weighted toward modes that target it.</p>
+      {% endif %}
+    </section>
+  {% else %}
+    <p>No sessions recorded yet. <a href="{{ url_for('index') }}">Start your first one</a>.</p>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Session history</h2>
+    <table class="recap-table">
+      <thead><tr><th>Mode</th><th>Topic</th><th>WPM</th><th>Filler %</th><th>Structure</th><th>Engagement</th></tr></thead>
+      <tbody>
+        {% for s in history %}
+          <tr>
+            <td>{{ s.mode_name }}</td>
+            <td>{{ s.topic }}</td>
+            <td>{{ s.metrics.wpm }}</td>
+            <td>{{ s.metrics.filler_rate }}%</td>
+            <td>{{ s.metrics.structure_score }}/10</td>
+            <td>{{ s.metrics.engagement_score ~ "/10" if s.metrics.engagement_score is defined else "--" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

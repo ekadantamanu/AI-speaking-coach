@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Session {{ idx + 1 }} of {{ total }}{% endblock %}
+{% block content %}
+  <p class="progress">Session {{ idx + 1 }} of {{ total }} &middot; slot: {{ entry.slot_type }}</p>
+  <h1>{{ entry.mode_name }}</h1>
+  <p class="trains">Trains: {{ entry.trains }}</p>
+
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <section class="panel">
+    <h2>Instructions</h2>
+    <p>{{ entry.instructions }}</p>
+    <p class="constraint">Today's twist: {{ entry.constraint.label }}</p>
+  </section>
+
+  <section class="panel prompt-box">
+    <h2 id="prompt-label">Topic</h2>
+    <p id="prompt-text">{{ entry.topic }}</p>
+  </section>
+
+  {% if entry.video %}
+  <section class="panel">
+    <p class="video-note">This mode scores body language too -- camera required. Face-forward, shoulders, and hand movement are analyzed locally (MediaPipe); nothing leaves your machine.</p>
+    <video id="preview" class="camera-preview" autoplay muted playsinline></video>
+  </section>
+  {% endif %}
+
+  <section class="panel timer-box">
+    <div id="phase-label">Get ready</div>
+    <div id="timer" class="timer">--</div>
+    <div class="controls">
+      <button id="start-btn" class="primary">Start</button>
+      <button id="stop-btn" class="secondary" disabled>Stop &amp; submit early</button>
+    </div>
+    <p id="mic-status" class="mic-status"></p>
+  </section>
+
+  <form id="submit-form" method="post" action="{{ url_for('submit', idx=idx) }}" enctype="multipart/form-data" style="display:none;">
+    <input type="file" name="audio" id="audio-input">
+  </form>
+
+  <script>
+    const ENTRY = {{ entry | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='js/recorder.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Today's queue complete{% endblock %}
+{% block content %}
+  <h1>Nice work -- today's queue is done</h1>
+  <p>{{ results | length }} session(s) completed today.</p>
+
+  <section class="panel">
+    <h2>Today's recap</h2>
+    <table class="recap-table">
+      <thead><tr><th>Mode</th><th>WPM</th><th>Filler %</th><th>Structure</th></tr></thead>
+      <tbody>
+        {% for r in results %}
+          <tr>
+            <td>{{ r.entry.mode_name }}</td>
+            <td>{{ r.metrics.wpm }}</td>
+            <td>{{ r.metrics.filler_rate }}%</td>
+            <td>{{ r.report.structure_score }}/10</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if summary.weakest %}
+    <section class="panel">
+      <p>Current focus area for tomorrow's queue: <strong>{{ summary.weakest.replace('_', ' ') }}</strong></p>
+    </section>
+  {% endif %}
+
+  <a class="primary btn-link" href="{{ url_for('index') }}">Back to home</a>
+  <a class="secondary btn-link" href="{{ url_for('dashboard') }}">View full dashboard</a>
+{% endblock %}
