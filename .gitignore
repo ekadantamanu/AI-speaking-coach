@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+venv/
+.venv/
+ai_speaking_coach.zip
+ai_speaking_coach_v2.zip
+testfile.txt
+zifjYdb7
+data/uploads/
+data/models/
